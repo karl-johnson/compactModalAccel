@@ -1,6 +1,24 @@
 #include "lis2de12_reg.h"
 
+#include 
 // must implement these functions in order to use lis2de12 library!
+
+
+
+
+// pin definitions
+#define LED_DATA PIN_PA5
+#define ACCEL_SS PIN_PB3
+#define MEM_SS PIN_PB2
+#define I2C_SDA PIN_PB1
+#define I2C_SCL PIN_PB0
+#define MOSI PIN_PA1
+#define MISO PIN_PA2
+#define SPI_CLK PIN_PA3
+// documentation page 352, 360
+
+
+
 
 /*
  * @brief  Write generic device register (platform dependent)
@@ -21,6 +39,7 @@ int32_t platform_write(void *handle, uint8_t Reg, const uint8_t *Bufp, uint16_t 
   HAL_SPI_Transmit(handle, (uint8_t*) bufp, len, 1000);
   HAL_GPIO_WritePin(CS_up_GPIO_Port, CS_up_Pin, GPIO_PIN_SET);
 }
+
 int32_t platform_read(void *handle, uint8_t Reg, uint8_t *Bufp, uint16_t len) {
   // read from registers using SPI, TODO
   reg |= 0xC0;
@@ -42,8 +61,7 @@ void setup() {
 
 /* GLOBAL VARIABLES */
 uint8_t state = 0;
-uint32_t recordDuration = 0;
-
+uint16_t recordDuration = 0;
 
 typedef enum {
   NOT_INIT,
@@ -118,7 +136,7 @@ void setLedColor(uint32_t color) {
   // take color of format 0xRRGGBB and send to addressable LED TODO
 }
 
-void updateSettings(uint32_t newDuration, uint8_t frequency = 0x09, uint8_t scale = 3) {
+void updateSettings(uint16_t newDuration, uint8_t frequency = 0x09, uint8_t scale = 3) {
   // duration is acquisition length in # of samples
   // frequency is a 1-byte value corresponding to sample freq (see line 754 of lis2de12_reg.h)
   // - 0x00 powerdown, 0x01 1 Hz, 0x09 5.xxx kHz
